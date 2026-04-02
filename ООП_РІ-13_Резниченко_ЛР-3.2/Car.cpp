@@ -1,50 +1,90 @@
-#define _CRT_SECURE_NO_WARNINGS 
+#define _CRT_SECURE_NO_WARNINGS
 #include "Car.h"
-#include <iostream>
 #include <cstring>
-#include <sstream> 
 #include <cstdlib>
 
-Car::Car(const char* b, double p, double engPow) : engine(engPow) {
-    brand = new char[std::strlen(b) + 1];
-    std::strcpy(brand, b);
-    if (!setPrice(p)) {
-        std::cerr << "Error: Invalid car price! Terminating." << std::endl;
-        std::exit(1);
+using namespace std;
+
+Car::Car() : engine(1.0), price(1.0) {
+    brand = nullptr;
+    setBrand("Unknown");
+}
+
+Car::Car(double p, const char* b, double pr) : engine(p) {
+    brand = nullptr;
+    setBrand(b);
+    setPrice(pr);
+}
+
+Car::Car(const Car& other) : engine(other.engine), price(other.price) {
+    brand = new char[strlen(other.brand) + 1];
+    strcpy(brand, other.brand);
+}
+
+Car& Car::operator=(const Car& other) {
+    if (this != &other) {
+        engine = other.engine;
+        setPrice(other.price);
+        setBrand(other.brand);
     }
+    return *this;
 }
 
 Car::~Car() {
     delete[] brand;
 }
 
-Car::Car(const Car& other) : engine(other.engine.getPower()), price(other.price) {
-    brand = new char[std::strlen(other.brand) + 1];
-    std::strcpy(brand, other.brand);
+Engine Car::getEngine() const {
+    return engine;
 }
 
-const char* Car::getBrand() const { return brand; }
-double Car::getPrice() const { return price; }
-double Car::getEnginePower() const { return engine.getPower(); }
+void Car::setEngine(const Engine& e) {
+    engine = e;
+}
+
+const char* Car::getBrand() const {
+    return brand;
+}
 
 void Car::setBrand(const char* b) {
-    if (b) {
+    if (!b || strlen(b) == 0) {
+        cout << "Error: Invalid car brand." << endl;
+        exit(1);
+    }
+    if (brand != nullptr) {
         delete[] brand;
-        brand = new char[std::strlen(b) + 1];
-        std::strcpy(brand, b);
     }
+    brand = new char[strlen(b) + 1];
+    strcpy(brand, b);
 }
 
-bool Car::setPrice(double p) {
-    if (p >= 0) {
-        price = p;
-        return true;
-    }
-    return false;
+double Car::getPrice() const {
+    return price;
 }
 
-Car::operator std::string() const {
-    std::stringstream ss;
-    ss << "Brand: " << brand << ", Price: " << price << ", Engine Power: " << engine.getPower();
-    return ss.str();
+void Car::setPrice(double pr) {
+    if (pr <= 0) {
+        cout << "Error: Invalid car price." << endl;
+        exit(1);
+    }
+    price = pr;
+}
+
+Car::operator string() const {
+    return string(engine) + ", Brand: " + string(brand) + ", Price: " + to_string(price);
+}
+
+istream& operator>>(istream& is, Car& c) {
+    double p, pr;
+    string b;
+    is >> p >> b >> pr;
+    c.setEngine(Engine(p));
+    c.setBrand(b.c_str());
+    c.setPrice(pr);
+    return is;
+}
+
+ostream& operator<<(ostream& os, const Car& c) {
+    os << string(c);
+    return os;
 }

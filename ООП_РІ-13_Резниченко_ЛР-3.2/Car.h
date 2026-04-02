@@ -1,28 +1,29 @@
-#ifndef CAR_H
-#define CAR_H
-
+#pragma once
 #include "Engine.h"
-#include <string>
+
+using namespace std;
 
 class Car {
-private:
+protected:
     Engine engine;
-    char* brand;   
+    char* brand;
     double price;
-
 public:
-    Car(const char* b = "", double p = 0, double engPow = 0);
+    Car();
+    Car(double p, const char* b, double pr);
+    Car(const Car& other);
+    Car& operator=(const Car& other);
     virtual ~Car();
-    Car(const Car& other); 
 
+    Engine getEngine() const;
+    void setEngine(const Engine& e);
     const char* getBrand() const;
-    double getPrice() const;
-    double getEnginePower() const;
-
     void setBrand(const char* b);
-    bool setPrice(double p);
+    double getPrice() const;
+    void setPrice(double pr);
 
-    operator std::string() const; 
+    virtual operator string() const;
+
+    friend istream& operator>>(istream& is, Car& c);
+    friend ostream& operator<<(ostream& os, const Car& c);
 };
-
-#endif

@@ -1,20 +1,40 @@
 #include "Engine.h"
-#include <iostream>
-#include <cstdlib> 
+#include <cstdlib>
 
-Engine::Engine(double p) {
-    if (!setPower(p)) {
-        std::cerr << "Error: Invalid engine power! Terminating." << std::endl;
-        std::exit(1);
-    }
+using namespace std;
+
+Engine::Engine() {
+    setPower(1.0);
 }
 
-double Engine::getPower() const { return power; }
+Engine::Engine(double p) {
+    setPower(p);
+}
 
-bool Engine::setPower(double p) {
-    if (p >= 0) {
-        power = p;
-        return true;
+double Engine::getPower() const {
+    return power;
+}
+
+void Engine::setPower(double p) {
+    if (p <= 0) {
+        cout << "Error: Invalid engine power." << endl;
+        exit(1);
     }
-    return false;
+    power = p;
+}
+
+Engine::operator string() const {
+    return "Engine Power: " + to_string(power);
+}
+
+istream& operator>>(istream& is, Engine& e) {
+    double p;
+    is >> p;
+    e.setPower(p);
+    return is;
+}
+
+ostream& operator<<(ostream& os, const Engine& e) {
+    os << string(e);
+    return os;
 }

@@ -1,20 +1,24 @@
-#ifndef LORRY_H
-#define LORRY_H
-
+#pragma once
 #include "Car.h"
 
-class Lorry : public Car { 
-private:
-    double loadCapacity;
+using namespace std;
 
+class Lorry : public Car {
+    double capacity;
 public:
-    Lorry(const char* b = "", double p = 0, double engPow = 0, double cap = 0);
-    ~Lorry();
+    Lorry();
+    Lorry(double p, const char* b, double pr, double cap);
+    Lorry(const Lorry& other);
+    Lorry& operator=(const Lorry& other);
+    ~Lorry() override;
 
-    double getLoadCapacity() const;
-    bool setLoadCapacity(double cap);
+    double getCapacity() const;
+    void setCapacity(double cap);
 
-    void display() const; 
+    void print() const;
+
+    operator string() const override;
+
+    friend istream& operator>>(istream& is, Lorry& l);
+    friend ostream& operator<<(ostream& os, const Lorry& l);
 };
-
-#endif

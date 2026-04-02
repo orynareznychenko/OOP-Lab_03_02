@@ -14,9 +14,11 @@ namespace UnitTest1
 		
 		TEST_METHOD(TestMethod1)
 		{
-			double validPower = 150.5;
-			Engine eng(validPower);
-			Assert::AreEqual(validPower, eng.getPower());
+			Engine eng(120.5);
+			Assert::AreEqual(120.5, eng.getPower());
+
+			eng.setPower(130.0);
+			Assert::AreEqual(130.0, eng.getPower());
 		}
 	};
 }

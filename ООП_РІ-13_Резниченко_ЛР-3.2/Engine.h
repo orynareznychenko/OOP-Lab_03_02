@@ -1,13 +1,20 @@
-#ifndef ENGINE_H
-#define ENGINE_H
+#pragma once
+#include <iostream>
+#include <string>
+
+using namespace std;
 
 class Engine {
-private:
     double power;
 public:
-    Engine(double p = 0);
-    double getPower() const;
-    bool setPower(double p);
-};
+    Engine();
+    Engine(double p);
 
-#endif
+    double getPower() const;
+    void setPower(double p);
+
+    operator string() const;
+
+    friend istream& operator>>(istream& is, Engine& e);
+    friend ostream& operator<<(ostream& os, const Engine& e);
+};
